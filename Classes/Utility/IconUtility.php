@@ -28,7 +28,8 @@ final class IconUtility {
 	static public function getFlagIconForLanguage($flagName, $options = array()) {
 		$flagName = (strlen($flagName) > 0) ? $flagName : 'unknown';
 
-		return \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('flags-' . ($flagName ? : 'unknown') , $options);
+        $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
+        return $iconFactory->getIcon('flags-'.($flagName ? : 'unknown'), \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL);
 	}
 
 	/**
