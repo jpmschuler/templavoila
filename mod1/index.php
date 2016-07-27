@@ -21,10 +21,6 @@
  */
 unset($MCONF);
 require(dirname(__FILE__) . '/conf.php');
-// require($BACK_PATH . 'init.php');
-$GLOBALS['LANG']->includeLLFile('EXT:templavoila/mod1/locallang.xlf');
-$GLOBALS['BE_USER']->modAccess($MCONF, 1); // This checks permissions and exits if the users has no permission for entry.
-// TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cms', 1);
 
 /**
  * Module 'Page' for the 'templavoila' extension.
@@ -350,6 +346,8 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 */
 	public function init() {
 		parent::init();
+        $this->getBackendUser()->modAccess($GLOBALS['MCONF'], 1);
+        $this->getLanguageService()->includeLLFile('EXT:templavoila/mod1/locallang.xlf'); 
 
 		$this->modSharedTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($this->id, 'mod.SHARED');
 		$this->MOD_SETTINGS = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleData($this->MOD_MENU, \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('SET'), $this->MCONF['name']);
