@@ -116,3 +116,9 @@ if (
 	);
 	\TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }
+
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler (
+    'tx_templavoila_mod1_ajax::moveRecord',
+    'tx_templavoila_mod1_ajax->moveRecord'
+    );
