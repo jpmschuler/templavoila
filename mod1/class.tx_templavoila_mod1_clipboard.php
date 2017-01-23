@@ -152,18 +152,58 @@ class tx_templavoila_mod1_clipboard {
 		$cutIcon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-edit-cut' . ($clipActive_cut ? '-release' : ''), array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('cutrecord')));
 		$refIcon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('extensions-templavoila-clip_ref' . ($clipActive_ref ? '-release' : ''), array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('createreference')));
 
-		$removeElement = '&amp;CB[removeAll]=normal';
-		$setElement = '&amp;CB[el][' . rawurlencode('tt_content|' . $elementRecord['uid']) . ']=' . rawurlencode($this->pObj->apiObj->flexform_getStringFromPointer($elementPointer));
-		$setElementRef = '&amp;CB[el][' . rawurlencode('tt_content|' . $elementRecord['uid']) . ']=1';
-
-		$linkCopy = '<a class="tpm-copy" href="index.php?' . $this->pObj->link_getParameters() . '&amp;CB[setCopyMode]=1&amp;CB[setFlexMode]=copy' . ($clipActive_copy ? $removeElement : $setElement) . '">' . $copyIcon . '</a>';
-		$linkCut = '<a class="tpm-cut" href="index.php?' . $this->pObj->link_getParameters() . '&amp;CB[setCopyMode]=0&amp;CB[setFlexMode]=cut' . ($clipActive_cut ? $removeElement : $setElement) . '">' . $cutIcon . '</a>';
-		$linkRef = '<a class="tpm-ref" href="index.php?' . $this->pObj->link_getParameters() . '&amp;CB[setCopyMode]=1&amp;CB[setFlexMode]=ref' . ($clipActive_ref ? $removeElement : $setElementRef) . '">' . $refIcon . '</a>';
+		$linkParamsRemove = array(
+		    'CB' => array(
+		        'removeAll' => 'normal'		     
+		    )
+		); 
+		$linkParamsSet = array(
+		    'CB' => array(
+		        'el' => array(
+		            rawurlencode('tt_content|' . $elementRecord['uid']) =>  rawurlencode($this->pObj->apiObj->flexform_getStringFromPointer($elementPointer))
+		        )
+		    )
+		);
+		$linkParamsSetRef = array(
+		    'CB' => array(
+		        'el' => array(
+		            rawurlencode('tt_content|' . $elementRecord['uid']) => 1
+		        )
+		    )
+		);
+		
+		$linkParamsCopy = array(
+		    'CB' => array(
+		        'setCopyMode' => 1,
+		        'setFlexMode' => 'copy',
+		
+		    )
+		);
+		$linkParamsCut = array(
+		    'CB' => array(
+		        'setCopyMode' => 0,
+		        'setFlexMode' => 'cut',
+		        
+		    )
+		);
+		$linkParamsRef = array(
+		    'CB' => array(
+		        'setCopyMode' => 1,
+		        'setFlexMode' => 'ref',
+		        
+		    )
+		);
+		$linkCopy = '<a class="tpm-copy" href="'.rawurldecode($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCopy,$clipActive_copy ? $linkParamsRemove : $linkParamsSet))).'">'.$copyIcon.'</a>';
+		$linkCut = '<a class="tpm-cut" href="'.rawurldecode($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCut,$clipActive_cut ? $linkParamsRemove : $linkParamsSet))).'">'.$cutIcon.'</a>';
+		$linkRef = '<a class="tpm-ref" href="'.rawurldecode($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsRef,$clipActive_ref ? $linkParamsRemove : $linkParamsSetRef))).'">'.$refIcon.'</a>';
+		
 
 		$output =
-			(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'copy') && !in_array('copy', $this->pObj->blindIcons) ? $linkCopy : '') .
-			(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'ref') && !in_array('ref', $this->pObj->blindIcons) ? $linkRef : '') .
-			(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'cut') && !in_array('cut', $this->pObj->blindIcons) ? $linkCut : '');
+		(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'copy') && !in_array('copy', $this->pObj->blindIcons) ? $linkCopy : '') .
+		(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'ref') && !in_array('ref', $this->pObj->blindIcons) ? $linkRef : '') .
+		(\TYPO3\CMS\Core\Utility\GeneralUtility::inList($listOfButtons, 'cut') && !in_array('cut', $this->pObj->blindIcons) ? $linkCut : '');
+		
+		
 
 		return $output;
 	}

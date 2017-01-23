@@ -2567,11 +2567,16 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 */
 	public function link_getParameters() {
 		$output =
-			'id=' . $this->id .
+			'id=' . $this->id .			
 			(is_array($this->altRoot) ? \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('altRoot', $this->altRoot) : '') .
 			($this->versionId ? '&amp;versionId=' . rawurlencode($this->versionId) : '');
 
 		return $output;
+	}
+
+	public function link_createCSRFurl($params) {
+	    $params['id'] = $this->id;
+	    return(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1',$params));
 	}
 
 	/**
