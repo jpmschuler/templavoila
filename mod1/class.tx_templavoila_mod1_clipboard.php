@@ -274,7 +274,6 @@ class tx_templavoila_mod1_clipboard {
 		$output = '';
 		$clearCB = $this->pObj->modTSconfig['properties']['keepElementsInClipboard'] ? '' : '&amp;CB[removeAll]=normal';
 		if (!in_array('pasteAfter', $this->pObj->blindIcons)) {
-		    //$output .= '<a class="tpm-pasteAfter" href="index.php?' . $this->pObj->link_getParameters() . $clearCB . '&amp;pasteRecord=' . $pasteMode . '&amp;source=' . rawurlencode($sourcePointerString) . '&amp;destination=' . rawurlencode($destinationPointerString) . '">' . $pasteAfterIcon . '</a>';
 		    $myParams = array(
 		        'pasteRecord' => $pasteMode,
 		        'source' => rawurlencode($sourcePointerString),
@@ -286,7 +285,6 @@ class tx_templavoila_mod1_clipboard {
 		}
 		// FCEs with sub elements have two different paste icons, normal elements only one:
 		if ($pasteMode == 'copy' && $clipboardElementHasSubElements && !in_array('pasteSubRef', $this->pObj->blindIcons)) {
-		    //$output .= '<a class="tpm-pasteSubRef" href="index.php?' . $this->pObj->link_getParameters() . $clearCB . '&amp;pasteRecord=copyref&amp;source=' . rawurlencode($sourcePointerString) . '&amp;destination=' . rawurlencode($destinationPointerString) . '">' . $pasteSubRefIcon . '</a>';
 		    $myParams = array(
 		        'pasteRecord' => 'copyref',
 		        'source' => rawurlencode($sourcePointerString),
