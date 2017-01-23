@@ -2576,7 +2576,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 	public function link_createCSRFurl($params) {
 	    $params['id'] = $this->id;
-	    return(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1',$params));
+	    return(rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1',$params)));
 	}
 
 	/**
