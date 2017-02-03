@@ -880,19 +880,19 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 		// View page
 		$viewAddGetVars = $this->currentLanguageUid ? '&L=' . $this->currentLanguageUid : '';
-		$buttons['view'] = '<a href="#" onclick="' . htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($this->id, $BACK_PATH, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($this->id), '', '', $viewAddGetVars)) . '">' .
+		$buttons['view'] = '<a href="#" class="btn btn-default btn-sm " onclick="' . htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($this->id, $BACK_PATH, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($this->id), '', '', $viewAddGetVars)) . '">' .
 			\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-view', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_core.php:labels.showPage', 1))) .
 			'</a>';
 
 		// Shortcut
 		if (\Extension\Templavoila\Utility\GeneralUtility::getBackendUser()->mayMakeShortcut()) {
-			$buttons['shortcut'] = $this->doc->makeShortcutIcon('id, edit_record, pointer, new_unique_uid, search_field, search_levels, showLimit', implode(',', array_keys($this->MOD_MENU)), $this->MCONF['name']);
+			$buttons['shortcut'] = $this->doc->makeShortcutIcon('id, edit_record, pointer, new_unique_uid, search_field, search_levels, showLimit', implode(',', array_keys($this->MOD_MENU)), $this->MCONF['name'],'','btn btn-default btn-sm');
 		}
 
 		// If access to Web>List for user, then link to that module.
 		if (\Extension\Templavoila\Utility\GeneralUtility::getBackendUser()->check('modules', 'web_list')) {
 			$href = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_list', array('id' => $this->id, 'returnUrl' => \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')));
-			$buttons['record_list'] = '<a href="' . htmlspecialchars($href) . '">' .
+			$buttons['record_list'] = '<a href="' . htmlspecialchars($href) . '" class="btn btn-default btn-sm ">' .
 				\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-list-open', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_core.php:labels.showList', 1))) .
 				'</a>';
 		}
@@ -900,13 +900,13 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		if (!$this->modTSconfig['properties']['disableIconToolbar']) {
 
 			// Page history
-			$buttons['history_page'] = '<a href="#" onclick="' . htmlspecialchars('jumpToUrl(\'' . $BACK_PATH . 'show_rechis.php?element=' . rawurlencode('pages:' . $this->id) . '&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')) . '#latest\');return false;') . '">' .
+			$buttons['history_page'] = '<a href="#" class="btn btn-default btn-sm " onclick="' . htmlspecialchars('jumpToUrl(\'' . $BACK_PATH . 'show_rechis.php?element=' . rawurlencode('pages:' . $this->id) . '&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')) . '#latest\');return false;') . '">' .
 				\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-history-open', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:cms/layout/locallang.xlf:recordHistory', 1))) .
 				'</a>';
 
 			if (!$this->translatorMode && \Extension\Templavoila\Utility\GeneralUtility::getBackendUser()->isPSet($this->calcPerms, 'pages', 'new')) {
 				// Create new page (wizard)
-				$buttons['new_page'] = '<a href="#" onclick="' . htmlspecialchars('jumpToUrl(\'' . $BACK_PATH . 'db_new.php?id=' . $this->id . '&pagesOnly=1&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '&updatePageTree=true') . '\');return false;') . '">' .
+				$buttons['new_page'] = '<a href="#" class="btn btn-default btn-sm " onclick="' . htmlspecialchars('jumpToUrl(\'' . $BACK_PATH . 'db_new.php?id=' . $this->id . '&pagesOnly=1&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '&updatePageTree=true') . '\');return false;') . '">' .
 					\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-page-new', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:cms/layout/locallang.xlf:newPage', 1))) .
 					'</a>';
 			}
@@ -914,11 +914,11 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			if (!$this->translatorMode && \Extension\Templavoila\Utility\GeneralUtility::getBackendUser()->isPSet($this->calcPerms, 'pages', 'edit')) {
 				// Edit page properties
 				$params = '&edit[pages][' . $this->id . ']=edit';
-				$buttons['edit_page'] = '<a href="#" onclick="' . htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::editOnClick($params, $BACK_PATH)) . '">' .
+				$buttons['edit_page'] = '<a href="#" class="btn btn-default btn-sm " onclick="' . htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::editOnClick($params, $BACK_PATH)) . '">' .
 					\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-open', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:cms/layout/locallang.xlf:editPageProperties', 1))) .
 					'</a>';
 				// Move page
-				$buttons['move_page'] = '<a href="' . htmlspecialchars($BACK_PATH . 'move_el.php?table=pages&uid=' . $this->id . '&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI'))) . '">' .
+				$buttons['move_page'] = '<a href="' . htmlspecialchars($BACK_PATH . 'move_el.php?table=pages&uid=' . $this->id . '&returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI'))) . '" class="btn btn-default btn-sm ">' .
 					\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-page-move', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:cms/layout/locallang.xlf:move_page', 1))) .
 					'</a>';
 			}
@@ -931,7 +931,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 					'&redirect=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')) .
 					'&cacheCmd=' . $this->id;
 
-				$buttons['cache'] = '<a href="' . $cacheUrl . '" title="' . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.clear_cache', TRUE) . '">' .
+				$buttons['cache'] = '<a href="' . $cacheUrl . '" class="btn btn-default btn-sm " title="' . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.clear_cache', TRUE) . '">' .
 					\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-cache-clear') .
 					'</a>';
 			}
@@ -1264,31 +1264,50 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		$title = \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($contentTreeArr['el']['fullTitle'], $this->previewTitleMaxLen);
 
 		// Finally assemble the table:
+		if ($contentTreeArr['el']['table'] == 'pages') {
+		    $finalContent = '
+			<div> 
+		    <h1>' .
+		    ($elementBelongsToCurrentPage ? '' : '<em>') . htmlspecialchars($title) . ($elementBelongsToCurrentPage ? '' : '</em>') .
+		    $titleBarLeftButtons .
+		    $languageIcon .
+		    '</h1>'.
+		    ($warnings ? '<div class="tpm-warnings">' . $warnings . '</div>' : '') .
+		    $this->render_framework_subElements($contentTreeArr, $languageKey, $sheet, $calcPerms) .
+		    '<div class="tpm-preview exampleContent">' . $previewContent . '</div>' .
+		    $this->render_localizationInfoTable($contentTreeArr, $parentPointer, $parentDsMeta) .
+		    '
+		</div>
+	';
+		}
+		else {
 		$finalContent = '
 			<div class="' . $elementClass . '">
 				<a name="c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $contentTreeArr['el']['uid']) . '"></a>
 				<div class="tpm-titlebar t3-page-ce-header ' . $elementTitlebarClass . '">
-					<div class="t3-row-header">
-						<div class="tpm-element-control">
+					
+						<div class="t3-page-ce-header-icons-left">' .
+			$titleBarLeftButtons .
+			$languageIcon .
+		'</div>
+						<div class="t3-page-ce-header-icons-right">
 						' . $titleBarRightButtons . '
 						</div>
-						<div class="tpm-element-title">' .
-			$languageIcon .
-			$titleBarLeftButtons .
-			'<div class="nobr sortable_handle">' .
-			($elementBelongsToCurrentPage ? '' : '<em>') . htmlspecialchars($title) . ($elementBelongsToCurrentPage ? '' : '</em>') .
-			'</div>
-		</div>
 	</div>
 </div>
-<div class="tpm-sub-elements">' .
+<div class="t3-page-ce-body"><div class="t3-page-ce-body-inner">' .
+
+'<strong>' .
+($elementBelongsToCurrentPage ? '' : '<em>') . htmlspecialchars($title) . ($elementBelongsToCurrentPage ? '' : '</em>') .
+'</strong><br/>'.
 			($warnings ? '<div class="tpm-warnings">' . $warnings . '</div>' : '') .
 			$this->render_framework_subElements($contentTreeArr, $languageKey, $sheet, $calcPerms) .
-			'<div class="tpm-preview">' . $previewContent . '</div>' .
+			'<div class="tpm-preview exampleContent">' . $previewContent . '</div>' .
 			$this->render_localizationInfoTable($contentTreeArr, $parentPointer, $parentDsMeta) .
-			'</div>
+			'</div></div>
 		</div>
-	';
+	'; 
+		}
 
 		return $finalContent;
 	}
@@ -2385,11 +2404,11 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 				(!$this->translatorMode || $forced)
 			) {
 				if ($table == "pages" && $this->currentLanguageUid) {
-					return '<a class="tpm-pageedit" href="index.php?' . $this->link_getParameters() . '&amp;editPageLanguageOverlay=' . $this->currentLanguageUid . '">' . $label . '</a>';
+					return '<a class="tpm-pageedit btn btn-default btn-sm " href="index.php?' . $this->link_getParameters() . '&amp;editPageLanguageOverlay=' . $this->currentLanguageUid . '">' . $label . '</a>';
 				} else {
 					$returnUrl = ($this->currentElementParentPointer) ? \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '#c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $uid) : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
 					$onClick = \TYPO3\CMS\Backend\Utility\BackendUtility::editOnClick('&edit[' . $table . '][' . $uid . ']=edit', $this->doc->backPath, $returnUrl);
-
+                    if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
 					return '<a class="' . $class . '" href="#" onclick="' . htmlspecialchars($onClick) . '">' . $label . '</a>';
 				}
 			} else {
@@ -2462,10 +2481,13 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 					 * can safely use '#'
 					 */
 					$returnUrl = ($this->currentElementParentPointer) ? \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '#c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $uid) : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
+					$class="tpm-hide";
+					if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
+						
 					if ($hidden) {
-						return '<a href="#" class="tpm-hide" onclick="sortable_unhideRecord(this, \'' . htmlspecialchars($GLOBALS['SOBE']->doc->issueCommand($params, $returnUrl)) . '\');">' . $label . '</a>';
+						return '<a href="#" class="'.$class.'" onclick="sortable_unhideRecord(this, \'' . htmlspecialchars($GLOBALS['SOBE']->doc->issueCommand($params, $returnUrl)) . '\');">' . $label . '</a>';
 					} else {
-						return '<a href="#" class="tpm-hide" onclick="sortable_hideRecord(this, \'' . htmlspecialchars($GLOBALS['SOBE']->doc->issueCommand($params, $returnUrl)) . '\');">' . $label . '</a>';
+						return '<a href="#" class="'.$class.'" onclick="sortable_hideRecord(this, \'' . htmlspecialchars($GLOBALS['SOBE']->doc->issueCommand($params, $returnUrl)) . '\');">' . $label . '</a>';
 					}
 				}
 			} else {
@@ -2497,7 +2519,10 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			'setFormValueOpenBrowser(\'db\',\'browser[communication]|||tt_content\');' .
 			'return false;';
 
-		return '<a href="#" class="tpm-browse" rel="index.php?' . htmlspecialchars($parameters) . '" onclick="' . htmlspecialchars($onClick) . '">' . $label . '</a>';
+		$class = "tpm-browse";
+		if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
+		
+		return '<a href="#" class="'.$class.'" rel="index.php?' . htmlspecialchars($parameters) . '" onclick="' . htmlspecialchars($onClick) . '">' . $label . '</a>';
 	}
 
 	/**
@@ -2515,8 +2540,11 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			$this->link_getParameters() .
 			'&amp;parentRecord=' . rawurlencode($this->apiObj->flexform_getStringFromPointer($parentPointer)) .
 			'&amp;returnUrl=' . rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI'));
-
-		return '<a class="tpm-new" href="' . $this->newContentWizScriptPath . '?' . $parameters . '">' . $label . '</a>';
+        
+		$class = "tpm-new";
+		if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
+			
+		return '<a class="'.$class.'" href="' . $this->newContentWizScriptPath . '?' . $parameters . '">' . $label . '</a>';
 	}
 
 	/**
@@ -2539,10 +2567,15 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 		if ($realDelete) {
 			$LLlabel = $foreignReferences ? 'deleteRecordWithReferencesMsg' : 'deleteRecordMsg';
-
-			return '<a class="tpm-delete" href="index.php?' . $this->link_getParameters() . '&amp;deleteRecord=' . $encodedUnlinkPointerString . '" onclick="' . htmlspecialchars('return confirm(' . \TYPO3\CMS\Core\Utility\GeneralUtility::quoteJSvalue(\Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL($LLlabel)) . ');') . '">' . $label . '</a>';
+			$class = "tpm-delete";
+			if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
+			
+			return '<a class="'.$class.'" href="index.php?' . $this->link_getParameters() . '&amp;deleteRecord=' . $encodedUnlinkPointerString . '" onclick="' . htmlspecialchars('return confirm(' . \TYPO3\CMS\Core\Utility\GeneralUtility::quoteJSvalue(\Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL($LLlabel)) . ');') . '">' . $label . '</a>';
 		} else {
-			return '<a class="tpm-unlink" href="javascript:' . htmlspecialchars('if (confirm(' . \TYPO3\CMS\Core\Utility\GeneralUtility::quoteJSvalue(\Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('unlinkRecordMsg')) . '))') . 'sortable_unlinkRecord(\'' . $encodedUnlinkPointerString . '\',\'' . $this->addSortableItem($unlinkPointerString) . '\',\'' . $elementPointer . '\');">' . $label . '</a>';
+		    $class = "tpm-unlink";
+		    if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
+		    
+			return '<a class="'.$class.'" href="javascript:' . htmlspecialchars('if (confirm(' . \TYPO3\CMS\Core\Utility\GeneralUtility::quoteJSvalue(\Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('unlinkRecordMsg')) . '))') . 'sortable_unlinkRecord(\'' . $encodedUnlinkPointerString . '\',\'' . $this->addSortableItem($unlinkPointerString) . '\',\'' . $elementPointer . '\');">' . $label . '</a>';
 		}
 	}
 

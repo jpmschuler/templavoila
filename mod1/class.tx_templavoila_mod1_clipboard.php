@@ -193,9 +193,10 @@ class tx_templavoila_mod1_clipboard {
 		        
 		    )
 		);
-		$linkCopy = '<a class="tpm-copy" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCopy,$clipActive_copy ? $linkParamsRemove : $linkParamsSet))).'">'.$copyIcon.'</a>';
-		$linkCut = '<a class="tpm-cut" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCut,$clipActive_cut ? $linkParamsRemove : $linkParamsSet))).'">'.$cutIcon.'</a>';
-		$linkRef = '<a class="tpm-ref" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsRef,$clipActive_ref ? $linkParamsRemove : $linkParamsSetRef))).'">'.$refIcon.'</a>';
+		
+		$linkCopy = '<a class="tpm-copy btn btn-default btn-sm" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCopy,$clipActive_copy ? $linkParamsRemove : $linkParamsSet))).'">'.$copyIcon.'</a>';
+		$linkCut = '<a class="tpm-cut btn btn-default btn-sm" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsCut,$clipActive_cut ? $linkParamsRemove : $linkParamsSet))).'">'.$cutIcon.'</a>';
+		$linkRef = '<a class="tpm-ref btn btn-default btn-sm" href="'.($this->pObj->link_createCSRFurl(array_merge_recursive($linkParamsRef,$clipActive_ref ? $linkParamsRemove : $linkParamsSetRef))).'">'.$refIcon.'</a>';
 		
 
 		$output =
@@ -348,14 +349,13 @@ class tx_templavoila_mod1_clipboard {
 			if (!$isDeletedInWorkspace) {
 				$elementRows[] = '
 					<tr id="' . $elementPointerString . '" class="tpm-nonused-element">
-						<td class="tpm-nonused-controls">' .
-					$cutButton . $languageIcon .
-					'</td>
-					<td class="tpm-nonused-ref">' .
+						<td class="tpm-nonused-buttons"><div class="btn-group" role="group" aria-label="">' .
+					$cutButton . 
 					$this->renderReferenceCount($row['uid']) .
-					'</td>
-					<td class="tpm-nonused-preview">' .
-					$recordButton . htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('tt_content', $row)) .
+					'</div></td><td class="tpm-nonused-icons">' .
+					$recordButton .$languageIcon . 
+					'</td><td>'.
+					htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('tt_content', $row)) .
 					'</td>
 				</tr>
 			';
@@ -372,7 +372,7 @@ class tx_templavoila_mod1_clipboard {
 					$params .= '&cmd[tt_content][' . $deleteUid . '][delete]=1';
 				}
 				$label = \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('rendernonusedelements_deleteall');
-				$deleteAll = '<a href="#" onclick="' . htmlspecialchars('jumpToUrl(\'' . $this->doc->issueCommand($params, -1) . '\');') . '">' .
+				$deleteAll = '<a href="#" class="btn btn-default btn-sm" onclick="' . htmlspecialchars('jumpToUrl(\'' . $this->doc->issueCommand($params, -1) . '\');') . '">' .
 					\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-edit-delete', array('title' => htmlspecialchars($label))) .
 					htmlspecialchars($label) .
 					'</a>';
@@ -380,15 +380,11 @@ class tx_templavoila_mod1_clipboard {
 
 			// Create table and header cell:
 			$output = '
-				<table class="tpm-nonused-elements lrPadding" border="0" cellpadding="0" cellspacing="1" width="100%">
-					<tr class="bgColor4-20">
-						<td colspan="3">' . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('inititemno_elementsNotBeingUsed', TRUE) . ':</td>
-					</tr>
+			    <p>'. \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('inititemno_elementsNotBeingUsed', TRUE) . ':</p>'.
+				'<table class="tpm-nonused-elements lrPadding">
 					' . implode('', $elementRows) . '
-					<tr class="bgColor4">
-						<td colspan="3" class="tpm-nonused-deleteall">' . $deleteAll . '</td>
-					</tr>
 				</table>
+			    <p><div class="btn-group">' . $deleteAll . '</div></p>
 			';
 		}
 
@@ -433,7 +429,7 @@ class tx_templavoila_mod1_clipboard {
 			$this->deleteUids[] = $uid;
 			$params = '&cmd[tt_content][' . $uid . '][delete]=1';
 
-			return '<a class="tpm-countRef" href="#" onclick="' . htmlspecialchars('jumpToUrl(\'' . $this->doc->issueCommand($params, -1) . '\');') . '">' .
+			return '<a class="tpm-countRef btn btn-default btn-sm" href="#" onclick="' . htmlspecialchars('jumpToUrl(\'' . $this->doc->issueCommand($params, -1) . '\');') . '">' .
 			\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-edit-delete', array('title' => \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('renderreferencecount_delete', TRUE))) .
 			'</a>';
 		}
