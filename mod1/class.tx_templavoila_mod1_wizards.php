@@ -113,10 +113,21 @@ class tx_templavoila_mod1_wizards {
 					}
 
 					// Create parameters and finally run the classic page module's edit form for the new page:
-					$params = '&edit[pages][' . $newID . ']=edit' . $columnsOnly;
 					$returnUrl = rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME') . '?id=' . $newID . '&updatePageTree=1');
-
-					header('Location: ' . \TYPO3\CMS\Core\Utility\GeneralUtility::locationHeaderUrl($this->doc->backPath . 'alt_doc.php?returnUrl=' . $returnUrl . $params));
+						$params = array(
+					    'edit' => array(
+					        'pages' => array(
+					            $newID => 'edit',
+					        ),
+					    ),
+					    'returnUrl' => $returnUrl,
+					);
+					if ($fieldNames !== '*') {
+					    $params['columnsOnly'] = rawurlencode($fieldNames);
+					}
+					$redirectLocation = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('record_edit',$params);
+						
+					header('Location: ' . $redirectLocation);
 					exit();
 				} else {
 					debug('Error: Could not create page!');
@@ -162,10 +173,20 @@ class tx_templavoila_mod1_wizards {
 						$fieldNames = isset ($TSconfig['value']) ? $TSconfig['value'] : 'hidden,title,alias';
 
 						// Create parameters and finally run the classic page module's edit form for the new page:
-						$params = '&edit[pages][' . $newID . ']=edit&columnsOnly=' . rawurlencode($fieldNames);
 						$returnUrl = rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME') . '?id=' . $newID . '&updatePageTree=1');
 
-						header('Location: ' . \TYPO3\CMS\Core\Utility\GeneralUtility::locationHeaderUrl($this->doc->backPath . 'alt_doc.php?returnUrl=' . $returnUrl . $params));
+						$params = array(
+						    'edit' => array(
+						        'pages' => array(
+						            $newID => 'edit',
+						        ),
+						    ),
+						    'columnsOnly' => rawurlencode($fieldNames),
+						    'returnUrl' => $returnUrl,
+						);
+						$redirectLocation = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('record_edit',$params);
+						
+						header('Location: ' . $redirectLocation);
 						exit();
 						// PLAIN COPY FROM ABOVE - END
 					} else {
