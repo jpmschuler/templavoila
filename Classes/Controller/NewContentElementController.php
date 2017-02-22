@@ -1,17 +1,12 @@
 <?php
 namespace Extension\Templavoila\Controller;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Module\AbstractModule;
-use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayoutView;
 use TYPO3\CMS\Backend\Wizard\NewContentElementWizardHookInterface;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -37,7 +32,7 @@ class NewContentElementController extends \TYPO3\CMS\Backend\Controller\ContentE
         $this->returnUrl = GeneralUtility::sanitizeLocalUrl(GeneralUtility::_GP('returnUrl'));
         if (! $this->parentRecord) {
             $mainContentAreaFieldName = $this->apiObj->ds_getFieldNameByColumnPosition($this->id, 0);
-            if ($mainContentAreaFieldName != FALSE) {
+            if ($mainContentAreaFieldName) {
                 $this->parentRecord = 'pages:' . $this->id . ':sDEF:lDEF:' . $mainContentAreaFieldName . ':vDEF:0';
             }
         }
@@ -47,7 +42,7 @@ class NewContentElementController extends \TYPO3\CMS\Backend\Controller\ContentE
     {
         if (! is_array($params)) {
             parse_str($wInfo['params'], $newparams);
-            $params = $mewparams;
+            $params = $newparams;
         }
         $params['id'] = $this->id;
         if (is_array($this->altRoot)) {
