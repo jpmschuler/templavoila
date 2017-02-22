@@ -307,7 +307,6 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 *
 	 * @var string
 	 */
-	protected $newContentWizScriptPath = 'db_new_content_el.php';
 
 	/**
 	 * @var \TYPO3\CMS\Core\Messaging\FlashMessageService
@@ -362,10 +361,6 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 		$tmpTSc = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($this->id, 'mod.web_list');
 		$tmpTSc = $tmpTSc ['properties']['newContentWiz.']['overrideWithExtension'];
-		$this->newContentWizScriptPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('templavoila') . 'mod1/db_new_content_el.php';	
-		if ($tmpTSc != 'templavoila' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($tmpTSc)) {
-			$this->newContentWizScriptPath = $GLOBALS['BACK_PATH'] . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($tmpTSc) . 'mod1/db_new_content_el.php';
-		}
 
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['templavoila']);
 
