@@ -24,4 +24,5 @@ return array(
 	'tx_templavoila_module1' => $extensionPath . 'mod1/index.php',
 	'tx_templavoila_module2' => $extensionPath . 'mod2/index.php',
 	'tx_templavoila_pi1' => $extensionPath . 'pi1/class.tx_templavoila_pi1.php',
+	'Extension\Templavoila\Controller\NewContentElementController' => $extensionPath . 'Classes/Controller/NewContentElementController.php',
 );

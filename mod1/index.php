@@ -1,4 +1,6 @@
 <?php
+
+use TYPO3\CMS\Core\Imaging\Icon;
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -325,6 +327,8 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 * @var array
 	 */
 	public $currentElementParentPointer;
+	
+	protected $iconFactory;
 
 	/**
 	 * With this doktype the normal Edit screen is rendered
@@ -346,7 +350,11 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 */
 	public function init() {
 		parent::init();
+
+		$this->iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+		
         $this->getBackendUser()->modAccess($GLOBALS['MCONF'], 1);
+        $this->getLanguageService()->includeLLFile('EXT:backend/Resources/Private/Language/locallang.xlf'); 
         $this->getLanguageService()->includeLLFile('EXT:templavoila/mod1/locallang.xlf'); 
 
 		$this->modSharedTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($this->id, 'mod.SHARED');
@@ -354,6 +362,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 		$tmpTSc = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($this->id, 'mod.web_list');
 		$tmpTSc = $tmpTSc ['properties']['newContentWiz.']['overrideWithExtension'];
+		$this->newContentWizScriptPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('templavoila') . 'mod1/db_new_content_el.php';	
 		if ($tmpTSc != 'templavoila' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($tmpTSc)) {
 			$this->newContentWizScriptPath = $GLOBALS['BACK_PATH'] . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($tmpTSc) . 'mod1/db_new_content_el.php';
 		}
@@ -547,19 +556,10 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			$this->doc->divClass = '';
 			$this->doc->form = '<form action="' . htmlspecialchars('index.php?' . $this->link_getParameters()) . '" method="post">';
 
-			// Add custom styles
-			$styleSheetFile = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($this->extKey) . 'Resources/Public/StyleSheet/mod1_' . substr(TYPO3_version, 0, 3) . '.css';
-			if (file_exists($styleSheetFile)) {
-				$styleSheetFile = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($this->extKey) . 'Resources/Public/StyleSheet/mod1_' . substr(TYPO3_version, 0, 3) . '.css';
-			} else {
-				$styleSheetFile = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($this->extKey) . 'Resources/Public/StyleSheet/mod1_default.css';
-			}
+			
 
-			if (isset($this->modTSconfig['properties']['stylesheet'])) {
-				$styleSheetFile = $this->modTSconfig['properties']['stylesheet'];
-			}
-
-			$this->doc->getPageRenderer()->addCssFile($GLOBALS['BACK_PATH'] . $styleSheetFile);
+			$this->doc->getPageRenderer()->addCssFile($GLOBALS['BACK_PATH'] . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($this->extKey) . 'Resources/Public/StyleSheet/mod1_7.6.css');
+			
 
 			if (isset($this->modTSconfig['properties']['stylesheet.'])) {
 				foreach ($this->modTSconfig['properties']['stylesheet.'] as $file) {
@@ -2543,9 +2543,25 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
         
 		$class = "tpm-new";
 		if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
-			
-		return '<a class="'.$class.'" href="' . $this->newContentWizScriptPath . '?' . $parameters . '">' . $label . '</a>';
+		$parameters = array('id' => $this->id, 'parentRecord' => $this->apiObj->flexform_getStringFromPointer($parentPointer), 'returnURL' => $this->link_createCSRFurl());
+
+		//return '<a class="'.$class.'" href="' . static::createUrlNewContentWiz($parameters) . '">' . $label . '</a>';
+		$link = '<a href="' . static::createUrlNewContentWiz($parameters) . '" title="'
+		    . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_misc.xlf:newContentElement') . '" class="btn btn-default btn-sm">'
+		        . $this->iconFactory->getIcon('actions-document-new', Icon::SIZE_SMALL)->render()
+		        . ' '
+		            . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:content') . '</a>';
+		            return($link);
 	}
+    static function createUrlNewContentWiz($params) {
+
+       // $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder::class);
+       // $uri = $uriBuilder->buildUriFromRoute('tvdb_new_content_el', $params);
+        //$uri = \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('tvdb_new_content_el',$params);
+                     $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+                        $uri = (string)$uriBuilder->buildUriFromRoute('tvdb_new_content_el',$params);
+        return($uri);
+    }
 
 	/**
 	 * Returns an HTML link for unlinking a content element. Unlinking means that the record still exists but
