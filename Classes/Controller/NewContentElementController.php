@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
-class NewContentElementController extends \TYPO3\CMS\Backend\Controller\ContentElement\NewContentElementController
+class NewContentElementController extends NewContentElementControllerTypo3Orig
 {
 
     /**

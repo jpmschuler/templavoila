@@ -549,7 +549,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 			$this->doc->bodyTagId = 'typo3-mod-php';
 			$this->doc->divClass = '';
-			$this->doc->form = '<form action="' . htmlspecialchars('index.php?' . $this->link_getParameters()) . '" method="post">';
+			$this->doc->form = '<form action="' . $this->link_createCSRFurl() . '" method="post">';
 
 			
 
@@ -702,8 +702,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 				if ($this->rootElementRecord['content_from_pid']) {
 					$contentPage = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord('pages', (int)$this->rootElementRecord['content_from_pid']);
 					$title = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages', $contentPage);
-					$linkToPid = 'index.php?id=' . (int)$this->rootElementRecord['content_from_pid'];
-					$link = '<a href="' . $linkToPid . '">' . htmlspecialchars($title) . ' (PID ' . (int)$this->rootElementRecord['content_from_pid'] . ')</a>';
+					$link = '<a href="' . $this->link_createCSRFurl(['id' => (int)$this->rootElementRecord['content_from_pid']]) . '">' . htmlspecialchars($title) . ' (PID ' . (int)$this->rootElementRecord['content_from_pid'] . ')</a>';
 					/** @var \TYPO3\CMS\Core\Messaging\FlashMessage $flashMessage */
 					$flashMessage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 						\TYPO3\CMS\Core\Messaging\FlashMessage::class,
@@ -978,7 +977,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 		// Create a back button if neccessary:
 		if (is_array($this->altRoot)) {
-			$output .= '<div style="text-align:right; width:100%; margin-bottom:5px;"><a href="index.php?id=' . $this->id . '">' .
+			$output .= '<div style="text-align:right; width:100%; margin-bottom:5px;"><a href="' . $this->link_createCSRFurl(['altRoot' => null]) . '">' .
 				\TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-view-go-back', array('title' => htmlspecialchars(\Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('goback')))) .
 				'</a></div>';
 		}
@@ -1916,7 +1915,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 								// Copy for language:
 								if ($this->rootElementLangParadigm == 'free') {
 									$sourcePointerString = $this->apiObj->flexform_getStringFromPointer($parentPointer);
-									$onClick = "document.location='index.php?" . $this->link_getParameters() . '&source=' . rawurlencode($sourcePointerString) . '&localizeElement=' . $sLInfo['ISOcode'] . "'; return false;";
+									$onClick = "document.location='" . $this->link_createCSRFurl(['source' => rawurlencode($sourcePointerString), 'localizeElement' => $sLInfo['ISOcode']]) . "'; return false;";
 								} else {
 									$params = '&cmd[tt_content][' . $contentTreeArr['el']['uid'] . '][localize]=' . $sys_language_uid;
 									$onClick = "document.location='" . $GLOBALS['SOBE']->doc->issueCommand($params, \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '#c' . md5($this->apiObj->flexform_getStringFromPointer($parentPointer) . $contentTreeArr['el']['uid'] . $sys_language_uid)) . "'; return false;";
@@ -2399,7 +2398,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 				(!$this->translatorMode || $forced)
 			) {
 				if ($table == "pages" && $this->currentLanguageUid) {
-					return '<a class="tpm-pageedit btn btn-default btn-sm " href="index.php?' . $this->link_getParameters() . '&amp;editPageLanguageOverlay=' . $this->currentLanguageUid . '">' . $label . '</a>';
+					return '<a class="tpm-pageedit btn btn-default btn-sm " href="' . $this->link_createCSRFurl(['editPageLanguageOverlay' => $this->currentLanguageUid]) . '">' . $label . '</a>';
 				} else {
 					$returnUrl = ($this->currentElementParentPointer) ? \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI') . '#c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $uid) : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
 					$onClick = \TYPO3\CMS\Backend\Utility\BackendUtility::editOnClick('&edit[' . $table . '][' . $uid . ']=edit', $this->doc->backPath, $returnUrl);
@@ -2504,11 +2503,10 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 */
 	public function link_browse($label, $parentPointer) {
 
-		$parameters =
-			$this->link_getParameters() .
-			'&pasteRecord=ref' .
-			'&source=' . rawurlencode('###') .
-			'&destination=' . rawurlencode($this->apiObj->flexform_getStringFromPointer($parentPointer));
+		$parameters = [
+			'pasteRecord' => 'ref',
+			'source' => rawurlencode('###'),
+			'destination' => rawurlencode($this->apiObj->flexform_getStringFromPointer($parentPointer))];
 		$onClick =
 			'browserPos = this;' .
 			'setFormValueOpenBrowser(\'db\',\'browser[communication]|||tt_content\');' .
@@ -2517,7 +2515,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		$class = "tpm-browse";
 		if(strpos($label,'icon') !== false) $class .= " btn btn-default btn-sm";
 		
-		return '<a href="#" class="'.$class.'" rel="index.php?' . htmlspecialchars($parameters) . '" onclick="' . htmlspecialchars($onClick) . '">' . $label . '</a>';
+		return '<a href="#" class="'.$class.'" rel="' . $this->link_createCSRFurl($parameters) . '" onclick="' . htmlspecialchars($onClick) . '">' . $label . '</a>';
 	}
 
 	/**
@@ -2614,10 +2612,22 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		return parse_url($output,PHP_URL_QUERY);
 	}
 
+	/**
+	 * quite explicit name to distinguish between deprecated code and new code
+	 *
+	 * @param array $params
+	 * @return unknown
+	 */
 	public function link_createCSRFurl($params = array()) {
-	    $params['id'] = $this->id;
-	    if (is_array($this->altRoot)) $params['altRoot'] = $this->altRoot;
-	    if ($this->versionId) $params['versionId'] = rawurlencode($this->versionId);
+	    if (!array_key_exists('id',$params)) { 
+	        $params['id'] = $this->id; 
+	    }
+	    if (!array_key_exists('altRoot',$params) && is_array($this->altRoot)) {
+	        $params['altRoot'] = $this->altRoot;
+	    }
+	    if ($this->versionId) {
+	        $params['versionId'] = rawurlencode($this->versionId);
+	    }
 	    return(rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1',$params)));
 	}
 
@@ -2690,7 +2700,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		foreach ($possibleCommands as $command) {
 			if (($commandParameters = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP($command)) != '') {
 
-				$redirectLocation = 'index.php?' . $this->link_getParameters();
+				$redirectLocation = $this->link_createCSRFurl();
 
 				$skipCurrentCommand = FALSE;
 				foreach ($hooks as $hookObj) {
