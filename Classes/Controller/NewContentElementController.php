@@ -18,7 +18,7 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
      * where to put the new CE)
      * example: pages:17927:sDEF:lDEF:field_content:vDEF:1
      * explanation: page id 17927, column tx_templavoila_flex search for field "field_content" and add new content at position 1
-     * 
+     *
      * @var string
      */
     protected $parentRecord = '';
@@ -53,17 +53,17 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
         }
         return (rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1', $params)));
     }
-    
+
     public function onClickInsertRecord()
     {
         $location = $this->linkToMod1([
             'createNewRecord' => rawurlencode($this->parentRecord),
-            'defVals' =>  $this->defVals,
+            'defVals' => $this->defVals,
             'returnUrl' => $this->returnUrl
         ]);
         return 'window.location.href=' . GeneralUtility::quoteJSvalue($location) . '+document.editForm.defValues.value; return false;';
     }
-    
+
     /**
      * Creating the module output.
      *
@@ -86,7 +86,7 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
                 } else {
                     $row = '';
                 }
-            } 
+            }
             $this->onClickEvent = $this->onClickInsertRecord();
             // ***************************
             // Creating content
@@ -95,31 +95,28 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
             // Wizard
             $wizardItems = $this->wizardArray();
             // Wrapper for wizards
-            $this->elementWrapper['section'] = ['', ''];
+            $this->elementWrapper['section'] = [
+                '',
+                ''
+            ];
             // Hook for manipulating wizardItems, wrapper, onClickEvent etc.
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms']['db_new_content_el']['wizardItemsHook'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms']['db_new_content_el']['wizardItemsHook'] as $classData) {
                     $hookObject = GeneralUtility::getUserObj($classData);
-                    if (!$hookObject instanceof NewContentElementWizardHookInterface) {
-                        throw new \UnexpectedValueException(
-                            $classData . ' must implement interface ' . NewContentElementWizardHookInterface::class,
-                            1227834741
-                            );
+                    if (! $hookObject instanceof NewContentElementWizardHookInterface) {
+                        throw new \UnexpectedValueException($classData . ' must implement interface ' . NewContentElementWizardHookInterface::class, 1227834741);
                     }
                     $hookObject->manipulateWizardItems($wizardItems, $this);
                 }
             }
             // Add document inline javascript
-            $this->moduleTemplate->addJavaScriptCode(
-                'NewContentElementWizardInlineJavascript',
-                '
+            $this->moduleTemplate->addJavaScriptCode('NewContentElementWizardInlineJavascript', '
 				function goToalt_doc() {
 					' . $this->onClickEvent . '
-				}'
-                );
-    
+				}');
+            
             $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-    
+            
             // Traverse items for the wizard.
             // An item is either a header or an item rendered with a radio button and title/description and icon:
             $cc = ($key = 0);
@@ -133,35 +130,34 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
                     $key = count($menuItems) - 1;
                 } else {
                     $content = '';
-    
-                    if (!$this->onClickEvent) {
+                    
+                    if (! $this->onClickEvent) {
                         // Radio button:
-                        $oC = 'document.editForm.defValues.value=unescape(' . GeneralUtility::quoteJSvalue(rawurlencode($wInfo['params'])) . ');goToalt_doc();' . (!$this->onClickEvent ? 'window.location.hash=\'#sel2\';' : '');
+                        $oC = 'document.editForm.defValues.value=unescape(' . GeneralUtility::quoteJSvalue(rawurlencode($wInfo['params'])) . ');goToalt_doc();' . (! $this->onClickEvent ? 'window.location.hash=\'#sel2\';' : '');
                         $content .= '<div class="media-left"><input type="radio" name="tempB" value="' . htmlspecialchars($k) . '" onclick="' . htmlspecialchars($oC) . '" /></div>';
                         // Onclick action for icon/title:
                         $aOnClick = 'document.getElementsByName(\'tempB\')[' . $cc . '].checked=1;' . $oC . 'return false;';
                     } else {
-                        $aOnClick = "document.editForm.defValues.value=unescape('" . rawurlencode($wInfo['params']) . "');goToalt_doc();" . (!$this->onClickEvent?"window.location.hash='#sel2';":'');
+                        $aOnClick = "document.editForm.defValues.value=unescape('" . rawurlencode($wInfo['params']) . "');goToalt_doc();" . (! $this->onClickEvent ? "window.location.hash='#sel2';" : '');
                     }
-    
+                    
                     if (isset($wInfo['icon'])) {
-                        GeneralUtility::deprecationLog('The PageTS-Config: mod.wizards.newContentElement.wizardItems.*.elements.*.icon'
-                            . ' is deprecated since TYPO3 CMS 7, will be removed in TYPO3 CMS 8.'
-                            . ' Register your icon in IconRegistry::registerIcon and use the new setting:'
-                            . ' mod.wizards.newContentElement.wizardItems.*.elements.*.iconIdentifier');
+                        GeneralUtility::deprecationLog('The PageTS-Config: mod.wizards.newContentElement.wizardItems.*.elements.*.icon' . ' is deprecated since TYPO3 CMS 7, will be removed in TYPO3 CMS 8.' . ' Register your icon in IconRegistry::registerIcon and use the new setting:' . ' mod.wizards.newContentElement.wizardItems.*.elements.*.iconIdentifier');
                         $wInfo['iconIdentifier'] = 'content-' . $k;
                         $icon = $wInfo['icon'];
                         if (StringUtility::beginsWith($icon, '../typo3conf/ext/')) {
                             $icon = str_replace('../typo3conf/ext/', 'EXT:', $icon);
                         }
-                        if (!StringUtility::beginsWith($icon, 'EXT:') && strpos($icon, '/') !== false) {
+                        if (! StringUtility::beginsWith($icon, 'EXT:') && strpos($icon, '/') !== false) {
                             $icon = TYPO3_mainDir . GeneralUtility::resolveBackPath($wInfo['icon']);
                         }
                         $iconRegistry->registerIcon($wInfo['iconIdentifier'], BitmapIconProvider::class, [
                             'source' => $icon
                         ]);
                     }
-                    $icon = $this->moduleTemplate->getIconFactory()->getIcon($wInfo['iconIdentifier'])->render();
+                    $icon = $this->moduleTemplate->getIconFactory()
+                        ->getIcon($wInfo['iconIdentifier'])
+                        ->render();
                     $menuItems[$key]['content'] .= '
 						<div class="media">
 							<a href="#" onclick="' . htmlspecialchars($aOnClick) . '">
@@ -170,13 +166,10 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
 									' . $icon . '
 								</div>
 								<div class="media-body">
-									<strong>' . htmlspecialchars($wInfo['title']) . '</strong>' .
-    									'<br />' .
-    									nl2br(htmlspecialchars(trim($wInfo['description']))) .
-    									'</div>
+									<strong>' . htmlspecialchars($wInfo['title']) . '</strong>' . '<br />' . nl2br(htmlspecialchars(trim($wInfo['description']))) . '</div>
 							</a>
 						</div>';
-    									$cc++;
+                    $cc ++;
                 }
             }
             // Add closing section-tag
@@ -184,27 +177,20 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
                 $menuItems[$key]['content'] .= $this->elementWrapper['section'][1];
             }
             // Add the wizard table to the content, wrapped in tabs
-            $code = '<p>' . $lang->getLL('sel1', 1) . '</p>' . $this->moduleTemplate->getDynamicTabMenu(
-                $menuItems,
-                'new-content-element-wizard'
-                );
-    
-            $this->content .= !$this->onClickEvent ? '<h2>' . $lang->getLL('1_selectType', true) . '</h2>' : '';
+            $code = '<p>' . $lang->getLL('sel1', 1) . '</p>' . $this->moduleTemplate->getDynamicTabMenu($menuItems, 'new-content-element-wizard');
+            
+            $this->content .= ! $this->onClickEvent ? '<h2>' . $lang->getLL('1_selectType', true) . '</h2>' : '';
             $this->content .= '<div>' . $code . '</div>';
-    
+            
             // If the user must also select a column:
-            if (!$this->onClickEvent) {
+            if (! $this->onClickEvent) {
                 // Add anchor "sel2"
                 $this->content .= '<div><a name="sel2"></a></div>';
                 // Select position
                 $code = '<p>' . $lang->getLL('sel2', 1) . '</p>';
-    
+                
                 // Load SHARED page-TSconfig settings and retrieve column list from there, if applicable:
-                $colPosArray = GeneralUtility::callUserFunction(
-                    BackendLayoutView::class . '->getColPosListItemsParsed',
-                    $this->id,
-                    $this
-                    );
+                $colPosArray = GeneralUtility::callUserFunction(BackendLayoutView::class . '->getColPosListItemsParsed', $this->id, $this);
                 $colPosIds = array_column($colPosArray, 1);
                 // Removing duplicates, if any
                 $colPosList = implode(',', array_unique(array_map('intval', $colPosIds)));

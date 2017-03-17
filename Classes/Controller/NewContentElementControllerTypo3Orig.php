@@ -14,7 +14,6 @@ namespace Extension\Templavoila\Controller;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Module\AbstractModule;
@@ -34,6 +33,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class NewContentElementControllerTypo3Orig extends AbstractModule
 {
+
     /**
      * Page id
      *
@@ -63,6 +63,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
     public $colPos;
 
     /**
+     *
      * @var int
      */
     public $uid_pid;
@@ -103,21 +104,25 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
     public $config;
 
     /**
+     *
      * @var array
      */
     protected $pageInfo;
 
     /**
+     *
      * @var array
      */
     protected $elementWrapper;
 
     /**
+     *
      * @var string
      */
     protected $onClickEvent;
 
     /**
+     *
      * @var array
      */
     protected $MCONF;
@@ -145,13 +150,13 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
         $lang->includeLLFile('EXT:backend/Resources/Private/Language/locallang_db_new_content_el.xlf');
         ArrayUtility::mergeRecursiveWithOverrule($LOCAL_LANG_orig, $GLOBALS['LOCAL_LANG']);
         $GLOBALS['LOCAL_LANG'] = $LOCAL_LANG_orig;
-
+        
         // Setting internal vars:
-        $this->id = (int)GeneralUtility::_GP('id');
-        $this->sys_language = (int)GeneralUtility::_GP('sys_language_uid');
+        $this->id = (int) GeneralUtility::_GP('id');
+        $this->sys_language = (int) GeneralUtility::_GP('sys_language_uid');
         $this->R_URI = GeneralUtility::sanitizeLocalUrl(GeneralUtility::_GP('returnUrl'));
-        $this->colPos = GeneralUtility::_GP('colPos') === null ? null : (int)GeneralUtility::_GP('colPos');
-        $this->uid_pid = (int)GeneralUtility::_GP('uid_pid');
+        $this->colPos = GeneralUtility::_GP('colPos') === null ? null : (int) GeneralUtility::_GP('colPos');
+        $this->uid_pid = (int) GeneralUtility::_GP('uid_pid');
         $this->MCONF['name'] = 'xMOD_db_new_content_el';
         $this->modTSconfig = BackendUtility::getModTSconfig($this->id, 'mod.wizards.newContentElement');
         $config = BackendUtility::getPagesTSconfig($this->id);
@@ -171,8 +176,9 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
      * Injects the request object for the current request or subrequest
      * As this controller goes only through the main() method, it is rather simple for now
      *
-     * @param ServerRequestInterface $request the current request
-     * @param ResponseInterface $response
+     * @param ServerRequestInterface $request
+     *            the current request
+     * @param ResponseInterface $response            
      * @return ResponseInterface the response with the content
      */
     public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
@@ -205,13 +211,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                 } else {
                     $row = '';
                 }
-                $this->onClickEvent = $posMap->onClickInsertRecord(
-                    $row,
-                    $this->colPos,
-                    '',
-                    $this->uid_pid,
-                    $this->sys_language
-                );
+                $this->onClickEvent = $posMap->onClickInsertRecord($row, $this->colPos, '', $this->uid_pid, $this->sys_language);
             } else {
                 $this->onClickEvent = '';
             }
@@ -222,31 +222,28 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
             // Wizard
             $wizardItems = $this->wizardArray();
             // Wrapper for wizards
-            $this->elementWrapper['section'] = ['', ''];
+            $this->elementWrapper['section'] = [
+                '',
+                ''
+            ];
             // Hook for manipulating wizardItems, wrapper, onClickEvent etc.
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms']['db_new_content_el']['wizardItemsHook'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms']['db_new_content_el']['wizardItemsHook'] as $classData) {
                     $hookObject = GeneralUtility::getUserObj($classData);
-                    if (!$hookObject instanceof NewContentElementWizardHookInterface) {
-                        throw new \UnexpectedValueException(
-                            $classData . ' must implement interface ' . NewContentElementWizardHookInterface::class,
-                            1227834741
-                        );
+                    if (! $hookObject instanceof NewContentElementWizardHookInterface) {
+                        throw new \UnexpectedValueException($classData . ' must implement interface ' . NewContentElementWizardHookInterface::class, 1227834741);
                     }
                     $hookObject->manipulateWizardItems($wizardItems, $this);
                 }
             }
             // Add document inline javascript
-            $this->moduleTemplate->addJavaScriptCode(
-                'NewContentElementWizardInlineJavascript',
-                '
+            $this->moduleTemplate->addJavaScriptCode('NewContentElementWizardInlineJavascript', '
                 function goToalt_doc() {
                     ' . $this->onClickEvent . '
-                }'
-            );
-
+                }');
+            
             $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-
+            
             // Traverse items for the wizard.
             // An item is either a header or an item rendered with a radio button and title/description and icon:
             $cc = ($key = 0);
@@ -260,35 +257,34 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                     $key = count($menuItems) - 1;
                 } else {
                     $content = '';
-
-                    if (!$this->onClickEvent) {
+                    
+                    if (! $this->onClickEvent) {
                         // Radio button:
-                        $oC = 'document.editForm.defValues.value=unescape(' . GeneralUtility::quoteJSvalue(rawurlencode($wInfo['params'])) . ');goToalt_doc();' . (!$this->onClickEvent ? 'window.location.hash=\'#sel2\';' : '');
+                        $oC = 'document.editForm.defValues.value=unescape(' . GeneralUtility::quoteJSvalue(rawurlencode($wInfo['params'])) . ');goToalt_doc();' . (! $this->onClickEvent ? 'window.location.hash=\'#sel2\';' : '');
                         $content .= '<div class="media-left"><input type="radio" name="tempB" value="' . htmlspecialchars($k) . '" onclick="' . htmlspecialchars($oC) . '" /></div>';
                         // Onclick action for icon/title:
                         $aOnClick = 'document.getElementsByName(\'tempB\')[' . $cc . '].checked=1;' . $oC . 'return false;';
                     } else {
-                        $aOnClick = "document.editForm.defValues.value=unescape('" . rawurlencode($wInfo['params']) . "');goToalt_doc();" . (!$this->onClickEvent?"window.location.hash='#sel2';":'');
+                        $aOnClick = "document.editForm.defValues.value=unescape('" . rawurlencode($wInfo['params']) . "');goToalt_doc();" . (! $this->onClickEvent ? "window.location.hash='#sel2';" : '');
                     }
-
+                    
                     if (isset($wInfo['icon'])) {
-                        GeneralUtility::deprecationLog('The PageTS-Config: mod.wizards.newContentElement.wizardItems.*.elements.*.icon'
-                            . ' is deprecated since TYPO3 CMS 7, will be removed in TYPO3 CMS 8.'
-                            . ' Register your icon in IconRegistry::registerIcon and use the new setting:'
-                            . ' mod.wizards.newContentElement.wizardItems.*.elements.*.iconIdentifier');
+                        GeneralUtility::deprecationLog('The PageTS-Config: mod.wizards.newContentElement.wizardItems.*.elements.*.icon' . ' is deprecated since TYPO3 CMS 7, will be removed in TYPO3 CMS 8.' . ' Register your icon in IconRegistry::registerIcon and use the new setting:' . ' mod.wizards.newContentElement.wizardItems.*.elements.*.iconIdentifier');
                         $wInfo['iconIdentifier'] = 'content-' . $k;
                         $icon = $wInfo['icon'];
                         if (StringUtility::beginsWith($icon, '../typo3conf/ext/')) {
                             $icon = str_replace('../typo3conf/ext/', 'EXT:', $icon);
                         }
-                        if (!StringUtility::beginsWith($icon, 'EXT:') && strpos($icon, '/') !== false) {
+                        if (! StringUtility::beginsWith($icon, 'EXT:') && strpos($icon, '/') !== false) {
                             $icon = TYPO3_mainDir . GeneralUtility::resolveBackPath($wInfo['icon']);
                         }
                         $iconRegistry->registerIcon($wInfo['iconIdentifier'], BitmapIconProvider::class, [
                             'source' => $icon
                         ]);
                     }
-                    $icon = $this->moduleTemplate->getIconFactory()->getIcon($wInfo['iconIdentifier'])->render();
+                    $icon = $this->moduleTemplate->getIconFactory()
+                        ->getIcon($wInfo['iconIdentifier'])
+                        ->render();
                     $menuItems[$key]['content'] .= '
                         <div class="media">
                             <a href="#" onclick="' . htmlspecialchars($aOnClick) . '">
@@ -297,13 +293,10 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                                     ' . $icon . '
                                 </div>
                                 <div class="media-body">
-                                    <strong>' . htmlspecialchars($wInfo['title']) . '</strong>' .
-                                    '<br />' .
-                                    nl2br(htmlspecialchars(trim($wInfo['description']))) .
-                                '</div>
+                                    <strong>' . htmlspecialchars($wInfo['title']) . '</strong>' . '<br />' . nl2br(htmlspecialchars(trim($wInfo['description']))) . '</div>
                             </a>
                         </div>';
-                    $cc++;
+                    $cc ++;
                 }
             }
             // Add closing section-tag
@@ -311,27 +304,20 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                 $menuItems[$key]['content'] .= $this->elementWrapper['section'][1];
             }
             // Add the wizard table to the content, wrapped in tabs
-            $code = '<p>' . $lang->getLL('sel1', 1) . '</p>' . $this->moduleTemplate->getDynamicTabMenu(
-                $menuItems,
-                'new-content-element-wizard'
-            );
-
-            $this->content .= !$this->onClickEvent ? '<h2>' . $lang->getLL('1_selectType', true) . '</h2>' : '';
+            $code = '<p>' . $lang->getLL('sel1', 1) . '</p>' . $this->moduleTemplate->getDynamicTabMenu($menuItems, 'new-content-element-wizard');
+            
+            $this->content .= ! $this->onClickEvent ? '<h2>' . $lang->getLL('1_selectType', true) . '</h2>' : '';
             $this->content .= '<div>' . $code . '</div>';
-
+            
             // If the user must also select a column:
-            if (!$this->onClickEvent) {
+            if (! $this->onClickEvent) {
                 // Add anchor "sel2"
                 $this->content .= '<div><a name="sel2"></a></div>';
                 // Select position
                 $code = '<p>' . $lang->getLL('sel2', 1) . '</p>';
-
+                
                 // Load SHARED page-TSconfig settings and retrieve column list from there, if applicable:
-                $colPosArray = GeneralUtility::callUserFunction(
-                    BackendLayoutView::class . '->getColPosListItemsParsed',
-                    $this->id,
-                    $this
-                );
+                $colPosArray = GeneralUtility::callUserFunction(BackendLayoutView::class . '->getColPosListItemsParsed', $this->id, $this);
                 $colPosIds = array_column($colPosArray, 1);
                 // Removing duplicates, if any
                 $colPosList = implode(',', array_unique(array_map('intval', $colPosIds)));
@@ -358,22 +344,25 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
         if ($this->R_URI) {
             $backButton = $buttonBar->makeLinkButton()
                 ->setHref($this->R_URI)
-                ->setTitle($this->getLanguageService()->getLL('goBack'))
-                ->setIcon($this->moduleTemplate->getIconFactory()->getIcon(
-                    'actions-view-go-back',
-                    Icon::SIZE_SMALL
-                ));
+                ->setTitle($this->getLanguageService()
+                ->getLL('goBack'))
+                ->setIcon($this->moduleTemplate->getIconFactory()
+                ->getIcon('actions-view-go-back', Icon::SIZE_SMALL));
             $buttonBar->addButton($backButton);
         }
-        $cshButton = $buttonBar->makeHelpButton()->setModuleName('xMOD_csh_corebe')->setFieldName('new_ce');
+        $cshButton = $buttonBar->makeHelpButton()
+            ->setModuleName('xMOD_csh_corebe')
+            ->setFieldName('new_ce');
         $buttonBar->addButton($cshButton);
     }
 
-    /***************************
+    /**
+     * *************************
      *
      * OTHER FUNCTIONS:
      *
-     ***************************/
+     * *************************
+     */
     /**
      * Returns the content of wizardArray() function...
      *
@@ -405,7 +394,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                     $showAll = in_array('*', $showItems, true);
                     $groupItems = [];
                     if (is_array($appendWizards[$groupKey . '.']['elements.'])) {
-                        $wizardElements = array_merge((array)$wizardGroup['elements.'], $appendWizards[$groupKey . '.']['elements.']);
+                        $wizardElements = array_merge((array) $wizardGroup['elements.'], $appendWizards[$groupKey . '.']['elements.']);
                     } else {
                         $wizardElements = $wizardGroup['elements.'];
                     }
@@ -420,7 +409,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                             }
                         }
                     }
-                    if (!empty($groupItems)) {
+                    if (! empty($groupItems)) {
                         $wizardItems[$groupKey] = $this->wizard_getGroupHeader($groupKey, $wizardGroup);
                         $wizardItems = array_merge($wizardItems, $groupItems);
                     }
@@ -433,12 +422,13 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
     }
 
     /**
-     * @param mixed $wizardElements
+     *
+     * @param mixed $wizardElements            
      * @return array
      */
     public function wizard_appendWizards($wizardElements)
     {
-        if (!is_array($wizardElements)) {
+        if (! is_array($wizardElements)) {
             $wizardElements = [];
         }
         if (is_array($GLOBALS['TBE_MODULES_EXT']['xMOD_db_new_content_el']['addElClasses'])) {
@@ -451,16 +441,19 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
         $returnElements = [];
         foreach ($wizardElements as $key => $wizardItem) {
             preg_match('/^[a-zA-Z0-9]+_/', $key, $group);
-            $wizardGroup = $group[0] ? substr($group[0], 0, -1) . '.' : $key;
+            $wizardGroup = $group[0] ? substr($group[0], 0, - 1) . '.' : $key;
             $returnElements[$wizardGroup]['elements.'][substr($key, strlen($wizardGroup)) . '.'] = $wizardItem;
         }
         return $returnElements;
     }
 
     /**
-     * @param string $groupKey Not used
-     * @param string $itemKey Not used
-     * @param array $itemConf
+     *
+     * @param string $groupKey
+     *            Not used
+     * @param string $itemKey
+     *            Not used
+     * @param array $itemConf            
      * @return array
      */
     public function wizard_getItem($groupKey, $itemKey, $itemConf)
@@ -473,8 +466,10 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
     }
 
     /**
-     * @param string $groupKey Not used
-     * @param array $wizardGroup
+     *
+     * @param string $groupKey
+     *            Not used
+     * @param array $wizardGroup            
      * @return array
      */
     public function wizard_getGroupHeader($groupKey, $wizardGroup)
@@ -490,13 +485,16 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
      * value pairs and check.
      * The values will be added to the "params" key of the array (which should probably be unset or empty by default).
      *
-     * @param array $wizardItems Wizard items, passed by reference
+     * @param array $wizardItems
+     *            Wizard items, passed by reference
      * @return void
      */
     public function removeInvalidElements(&$wizardItems)
     {
         // Get TCEFORM from TSconfig of current page
-        $row = ['pid' => $this->id];
+        $row = [
+            'pid' => $this->id
+        ];
         $TCEFORM_TSconfig = BackendUtility::getTCEFORM_TSconfig('tt_content', $row);
         $headersUsed = [];
         // Traverse wizard items:
@@ -509,10 +507,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                 // unset them from $tempGetVars and re-implode $tempGetVars into the param string
                 // (in case remaining parameters are around).
                 if (is_array($tempGetVars['defVals']['tt_content'])) {
-                    $wizardItems[$key]['tt_content_defValues'] = array_merge(
-                        is_array($wizardItems[$key]['tt_content_defValues']) ? $wizardItems[$key]['tt_content_defValues'] : [],
-                        $tempGetVars['defVals']['tt_content']
-                    );
+                    $wizardItems[$key]['tt_content_defValues'] = array_merge(is_array($wizardItems[$key]['tt_content_defValues']) ? $wizardItems[$key]['tt_content_defValues'] : [], $tempGetVars['defVals']['tt_content']);
                     unset($tempGetVars['defVals']['tt_content']);
                     $wizardItems[$key]['params'] = GeneralUtility::implodeArrayForUrl('', $tempGetVars);
                 }
@@ -525,24 +520,15 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                     if (is_array($GLOBALS['TCA']['tt_content']['columns'][$fN])) {
                         // Get information about if the field value is OK:
                         $config = &$GLOBALS['TCA']['tt_content']['columns'][$fN]['config'];
-                        $authModeDeny = $config['type'] == 'select' && $config['authMode']
-                            && !$backendUser->checkAuthMode('tt_content', $fN, $fV, $config['authMode']);
+                        $authModeDeny = $config['type'] == 'select' && $config['authMode'] && ! $backendUser->checkAuthMode('tt_content', $fN, $fV, $config['authMode']);
                         // explode TSconfig keys only as needed
-                        if (!isset($removeItems[$fN])) {
-                            $removeItems[$fN] = GeneralUtility::trimExplode(
-                                ',',
-                                $TCEFORM_TSconfig[$fN]['removeItems'],
-                                true
-                            );
+                        if (! isset($removeItems[$fN])) {
+                            $removeItems[$fN] = GeneralUtility::trimExplode(',', $TCEFORM_TSconfig[$fN]['removeItems'], true);
                         }
-                        if (!isset($keepItems[$fN])) {
-                            $keepItems[$fN] = GeneralUtility::trimExplode(
-                                ',',
-                                $TCEFORM_TSconfig[$fN]['keepItems'],
-                                true
-                            );
+                        if (! isset($keepItems[$fN])) {
+                            $keepItems[$fN] = GeneralUtility::trimExplode(',', $TCEFORM_TSconfig[$fN]['keepItems'], true);
                         }
-                        $isNotInKeepItems = !empty($keepItems[$fN]) && !in_array($fV, $keepItems[$fN]);
+                        $isNotInKeepItems = ! empty($keepItems[$fN]) && ! in_array($fV, $keepItems[$fN]);
                         if ($authModeDeny || $fN === 'CType' && (in_array($fV, $removeItems[$fN]) || $isNotInKeepItems)) {
                             // Remove element all together:
                             unset($wizardItems[$key]);
@@ -560,7 +546,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
         // remove headers without elements
         foreach ($wizardItems as $key => $cfg) {
             $tmp = explode('_', $key);
-            if ($tmp[0] && !$tmp[1] && !in_array($tmp[0], $headersUsed)) {
+            if ($tmp[0] && ! $tmp[1] && ! in_array($tmp[0], $headersUsed)) {
                 unset($wizardItems[$key]);
             }
         }

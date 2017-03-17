@@ -12,10 +12,10 @@ use Extension\Templavoila\Controller;
  * but will be extended further.
  */
 return [
-        'tvdb_new_content_el' => [
-                'path' => '/templavoila/db_new_content_el',
-                'access' => 'user,group',
-                'target' => Extension\Templavoila\Controller\NewContentElementController::class . '::mainAction'
-        ],
-
-    ];
+    'tvdb_new_content_el' => [
+        'path' => '/templavoila/db_new_content_el',
+        'access' => 'user,group',
+        'target' => Extension\Templavoila\Controller\NewContentElementController::class . '::mainAction'
+    ]
+]
+;
