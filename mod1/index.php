@@ -621,7 +621,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 
 			//Prototype /Scriptaculous
 			// prototype is loaded before, so no need to include twice.
-			$this->doc->JScodeLibArray['prototype'] = '<script src="' . $this->doc->backPath . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('templavoila') . 'Resources/Public/JavaScript/contrib/prototype/prototype.js" type="text/javascript"></script>';
+			$this->doc->JScodeLibArray['prototype'] = '<script src="' . $this->doc->backPath . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('templavoila') . 'Resources/Public/JavaScript/contrib/prototype/prototype_patched.js" type="text/javascript"></script>';
 			$this->doc->JScodeLibArray['scriptaculous'] = '<script src="' . $this->doc->backPath . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('templavoila') . 'Resources/Public/JavaScript/contrib/scriptaculous/scriptaculous.js?load=effects,dragdrop,builder" type="text/javascript"></script>';
 			$this->doc->JScodeLibArray['templavoila_mod1'] = '<script src="' . $this->doc->backPath . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('templavoila') . 'Resources/Public/JavaScript/dragdrop7LTS.js" type="text/javascript"></script>';
 				
@@ -1275,32 +1275,30 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	';
 		}
 		else {
-		$finalContent = '
-			<div class="' . $elementClass . '">
-				<a name="c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $contentTreeArr['el']['uid']) . '"></a>
-				<div class="tpm-titlebar t3-page-ce-header ' . $elementTitlebarClass . '">
-					
-						<div class="t3-page-ce-header-icons-left">' .
-			$titleBarLeftButtons .
-			$languageIcon .
-		'</div>
-						<div class="t3-page-ce-header-icons-right">
-						' . $titleBarRightButtons . '
-						</div>
-	</div>
-</div>
-<div class="t3-page-ce-body"><div class="t3-page-ce-body-inner">' .
-
-'<strong>' .
-($elementBelongsToCurrentPage ? '' : '<em>') . htmlspecialchars($title) . ($elementBelongsToCurrentPage ? '' : '</em>') .
-'</strong><br/>'.
-			($warnings ? '<div class="tpm-warnings">' . $warnings . '</div>' : '') .
-			$this->render_framework_subElements($contentTreeArr, $languageKey, $sheet, $calcPerms) .
-			'<div class="tpm-preview exampleContent">' . $previewContent . '</div>' .
-			$this->render_localizationInfoTable($contentTreeArr, $parentPointer, $parentDsMeta) .
-			'</div></div>
-		</div>
-	'; 
+		$finalContent = 
+			'<div class="' . $elementClass . '">'.
+				'<a name="c' . md5($this->apiObj->flexform_getStringFromPointer($this->currentElementParentPointer) . $contentTreeArr['el']['uid']) . '"></a>'.
+				'<div class="tpm-titlebar t3-page-ce-header ' . $elementTitlebarClass . '">'.
+                    '<div class="t3-page-ce-header-icons-left">' .
+            			$titleBarLeftButtons .
+            			$languageIcon .
+            		'</div>'.
+					'<div class="t3-page-ce-header-icons-right">'.
+						$titleBarRightButtons . 
+					'</div>'.         
+	           '</div>'.
+                '<div class="t3-page-ce-body"><div class="t3-page-ce-body-inner">' .
+                    '<strong>' .
+                        ($elementBelongsToCurrentPage ? '' : '<em>') . htmlspecialchars($title) . ($elementBelongsToCurrentPage ? '' : '</em>') .
+                    '</strong><br/>'.
+        			($warnings ? '<div class="tpm-warnings">' . $warnings . '</div>' : '') .
+        			$this->render_framework_subElements($contentTreeArr, $languageKey, $sheet, $calcPerms) .
+        			'<div class="tpm-preview exampleContent">' . $previewContent . '</div>' .
+        			$this->render_localizationInfoTable($contentTreeArr, $parentPointer, $parentDsMeta) .
+        			'</div>'.
+        		'</div>'.
+    		'</div>';
+	 
 		}
 
 		return $finalContent;

@@ -2678,6 +2678,7 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
 
   function descendantOf_compareDocumentPosition(element, ancestor) {
     element = $(element), ancestor = $(ancestor);
+    if (ancestor == null) return false;
     return (element.compareDocumentPosition(ancestor) & 8) === 8;
   }
 
