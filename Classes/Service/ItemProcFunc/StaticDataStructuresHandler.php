@@ -152,13 +152,13 @@ class StaticDataStructuresHandler {
 	 *
 	 * @return void
 	 */
-	public function templateObjectItemsProcFunc(array &$params, \TYPO3\CMS\Backend\Form\FormEngine &$pObj) {
+	public function templateObjectItemsProcFunc(array &$params, &$fObj) {
 		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['templavoila']);
 
 		if ($this->conf['enable.']['selectDataStructure']) {
-			$this->templateObjectItemsProcFuncForCurrentDS($params, $pObj);
+			$this->templateObjectItemsProcFuncForCurrentDS($params);
 		} else {
-			$this->templateObjectItemsProcFuncForAllDSes($params, $pObj);
+			$this->templateObjectItemsProcFuncForAllDSes($params);
 		}
 	}
 
@@ -171,13 +171,13 @@ class StaticDataStructuresHandler {
 	 *
 	 * @return void
 	 */
-	protected function templateObjectItemsProcFuncForCurrentDS(array &$params, \TYPO3\CMS\Backend\Form\FormEngine &$pObj) {
+	protected function templateObjectItemsProcFuncForCurrentDS(array &$params) {
 		// Get DS
-		$tsConfig = & $pObj->cachedTSconfig[$params['table'] . ':' . $params['row']['uid']];
+		$tsConfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getTCEFORM_TSconfig($params['table'],$params['row']['uid']);
 		$fieldName = $params['field'] == 'tx_templavoila_next_to' ? 'tx_templavoila_next_ds' : 'tx_templavoila_ds';
 		$dataSource = $tsConfig['_THIS_ROW'][$fieldName];
 
-		$storagePid = $this->getStoragePid($params, $pObj);
+		$storagePid = $this->getStoragePid($params);
 
 		$removeTOItems = $this->getRemoveItems($params, substr($params['field'], 0, -2) . 'to');
 
@@ -219,8 +219,8 @@ class StaticDataStructuresHandler {
 	 *
 	 * @return void
 	 */
-	protected function templateObjectItemsProcFuncForAllDSes(array &$params, \TYPO3\CMS\Backend\Form\FormEngine &$pObj) {
-		$storagePid = $this->getStoragePid($params, $pObj);
+	protected function templateObjectItemsProcFuncForAllDSes(array &$params) {
+		$storagePid = $this->getStoragePid($params);
 		$scope = $this->getScope($params);
 
 		$removeDSItems = $this->getRemoveItems($params, substr($params['field'], 0, -2) . 'ds');
@@ -273,11 +273,10 @@ class StaticDataStructuresHandler {
 	 *
 	 * @return integer Storage pid
 	 */
-	protected function getStoragePid(array &$params, \TYPO3\CMS\Backend\Form\FormEngine &$pObj) {
+	protected function getStoragePid(array &$params) {
 		// Get default first
-		$tsConfig = & $pObj->cachedTSconfig[$params['table'] . ':' . $params['row']['uid']];
-		$storagePid = (int)$tsConfig['_STORAGE_PID'];
-
+		$tsConfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($params['row']['uid']);
+		$storagePid = (int)$tsConfig['TCEFORM.']['pages.']['tx_templavoila_to.']['storagePid'];
 		// Check for alternative storage folder
 		$field = $params['table'] == 'pages' ? 'uid' : 'pid';
 		$modTSConfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($params['row'][$field], 'tx_templavoila.storagePid');
