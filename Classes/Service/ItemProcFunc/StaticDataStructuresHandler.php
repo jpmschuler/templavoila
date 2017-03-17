@@ -115,9 +115,9 @@ class StaticDataStructuresHandler {
 	 *
 	 * @return void
 	 */
-	public function dataSourceItemsProcFunc(array &$params, \TYPO3\CMS\Backend\Form\FormEngine& $pObj) {
+	public function dataSourceItemsProcFunc(array &$params, \TYPO3\CMS\Backend\Form\FormEngine& $fObj) {
 
-		$storagePid = $this->getStoragePid($params, $pObj);
+		$storagePid = $this->getStoragePid($params);
 		$scope = $this->getScope($params);
 
 		$removeDSItems = $this->getRemoveItems($params, substr($params['field'], 0, -2) . 'ds');
