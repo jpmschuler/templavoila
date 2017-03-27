@@ -22,10 +22,18 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
      * @var string
      */
     protected $parentRecord = '';
+    /**
+     * @var \Extension\Templavoila\Service\ApiService
+     */
+    protected $apiObj;
+    
 
     public function init()
     {
         parent::init();
+        $this->modTSconfig = BackendUtility::getModTSconfig($this->id, 'templavoila.wizards.newContentElement');
+        $config = BackendUtility::getPagesTSconfig($this->id);
+        $this->config = $config['templavoila.']['wizards.']['newContentElement.'];
         $this->parentRecord = GeneralUtility::_GP('parentRecord');
         $this->altRoot = GeneralUtility::_GP('altRoot');
         $this->defVals = GeneralUtility::_GP('defVals');
@@ -36,6 +44,8 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
                 $this->parentRecord = 'pages:' . $this->id . ':sDEF:lDEF:' . $mainContentAreaFieldName . ':vDEF:0';
             }
         }
+        $this->apiObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\Service\ApiService::class);
+        
     }
 
     public function linkToMod1($params = array())
@@ -206,5 +216,75 @@ class NewContentElementController extends NewContentElementControllerTypo3Orig
         $this->content .= '</form>';
         // Setting up the buttons and markers for docheader
         $this->getButtons();
+    }
+    
+    /**
+     * Get wizard array for plugins
+     *
+     * @param array $wizardElements
+     *
+     * @return array $returnElements
+     */
+    public function wizard_appendWizards($wizardElements) {
+        $pluginWizards= parent::wizard_appendWizards($wizardElements);
+        $fceWizards = $this->wizard_renderFCEs($wizardElements);
+        $appendWizards = array_merge((array) $fceWizards, (array) $pluginWizards);
+        return $appendWizards;
+    }
+    
+    /**
+     * Get wizard array for FCEs
+     *
+     * @param array $wizardElements
+     *
+     * @return array $returnElements
+     */
+    
+    public function wizard_renderFCEs($wizardElements = array()) {
+        $returnElements = array();
+        
+        // Flexible content elements:
+        $positionPid = $this->id;
+        $storageFolderPID = $this->apiObj->getStorageFolderPid($positionPid);
+       
+        $toRepo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\Domain\Repository\TemplateRepository::class);
+        $toList = $toRepo->getTemplatesByStoragePidAndScope($storageFolderPID, \Extension\Templavoila\Domain\Model\AbstractDataStructure::SCOPE_FCE);
+        foreach ($toList as $toObj) {
+            /** @var \Extension\Templavoila\Domain\Model\Template $toObj */
+            if ($toObj->isPermittedForUser()) {
+                $tmpFilename = $toObj->getIcon();
+                $returnElements['fce.']['elements.']['fce_' . $toObj->getKey() . '.'] = array(
+                    'icon' => (@is_file(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(substr($tmpFilename, 3)))) ? $tmpFilename : ('../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('templavoila') . 'Resources/Public/Image/default_previewicon.gif'),
+                    'description' => $toObj->getDescription() ? htmlspecialchars($toObj->getDescription()) : \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->getLL('template_nodescriptionavailable'),
+                    'title' => $toObj->getLabel(),
+                    'params' => $this->getDsDefaultValues($toObj)
+                );
+            }
+        }
+        return $returnElements;
+    }
+    
+    /**
+     * Process the default-value settings
+     *
+     * @param \Extension\Templavoila\Domain\Model\Template $toObj LocalProcessing as array
+     *
+     * @return string additional URL arguments with configured default values
+     */
+    public function getDsDefaultValues(\Extension\Templavoila\Domain\Model\Template $toObj) {
+        
+        $dsStructure = $toObj->getLocalDataprotArray();
+        
+        $dsValues = '&defVals[tt_content][CType]=templavoila_pi1'
+            . '&defVals[tt_content][tx_templavoila_ds]=' . $toObj->getDatastructure()->getKey()
+            . '&defVals[tt_content][tx_templavoila_to]=' . $toObj->getKey();
+            
+            if (is_array($dsStructure) && is_array($dsStructure['meta']['default']['TCEForms'])) {
+                foreach ($dsStructure['meta']['default']['TCEForms'] as $field => $value) {
+                    $dsValues .= '&defVals[tt_content][' . $field . ']=' . $value;
+                }
+            }
+            
+            return $dsValues;
     }
 }
