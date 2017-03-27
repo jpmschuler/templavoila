@@ -938,6 +938,11 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
                 $buttons['cache'] = '<a href="' . $cacheUrl . '" class="btn btn-default btn-sm " title="' . \Extension\Templavoila\Utility\GeneralUtility::getLanguageService()->sL('LLL:EXT:lang/locallang_core.xlf:labels.clear_cache', TRUE) . '">' . \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-cache-clear') . '</a>';
             }
         }
+        // TODO fix unnecessary buttons:
+        unset($buttons['new_page']);
+        unset($buttons['move_page']);
+        unset($buttons['csh']);
+        unset($buttons['history_page']);
         
         return $buttons;
     }

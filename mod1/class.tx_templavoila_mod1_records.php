@@ -167,7 +167,7 @@ class tx_templavoila_mod1_records {
 		$this->dblist->backPath = $this->pObj->doc->backPath;
 		$this->dblist->calcPerms = $this->calcPerms;
 		$this->dblist->thumbs = \Extension\Templavoila\Utility\GeneralUtility::getBackendUser()->uc['thumbnailsByDefault'];
-		$this->dblist->returnUrl = $GLOBALS['BACK_PATH'] . TYPO3_MOD_PATH . 'index.php?' . $this->pObj->link_getParameters();
+		$this->dblist->returnUrl = rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1', ['id' =>  $this->pObj->id])) ;
 		$this->dblist->allFields = TRUE;
 		$this->dblist->localizationView = TRUE;
 		$this->dblist->showClipboard = FALSE;

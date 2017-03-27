@@ -125,7 +125,7 @@ class tx_templavoila_mod1_wizards
                     }
                     
                     // Create parameters and finally run the classic page module's edit form for the new page:
-                    $returnUrl = rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME') . '?id=' . $newID . '&updatePageTree=1');
+                    $returnUrl = rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1', ['id' => $newID, 'updatePageTree' => 1]));
                     $params = array(
                         'edit' => array(
                             'pages' => array(
@@ -185,7 +185,7 @@ class tx_templavoila_mod1_wizards
                         $fieldNames = isset($TSconfig['value']) ? $TSconfig['value'] : 'hidden,title,alias';
                         
                         // Create parameters and finally run the classic page module's edit form for the new page:
-                        $returnUrl = rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME') . '?id=' . $newID . '&updatePageTree=1');
+                        $returnUrl = rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1', ['id' => $newID, 'updatePageTree' => 1]));
                         
                         $params = array(
                             'edit' => array(
@@ -209,7 +209,7 @@ class tx_templavoila_mod1_wizards
         }
         // Start assembling the HTML output
         
-        $this->doc->form = '<form action="' . htmlspecialchars('index.php?id=' . $this->pObj->id) . '" method="post" autocomplete="off" enctype="' . $TYPO3_CONF_VARS['SYS']['form_enctype'] . '" onsubmit="return TBE_EDITOR_checkSubmit(1);">';
+        $this->doc->form = '<form action="' .rawurldecode(\TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_txtemplavoilaM1', ['id' =>  $this->pObj->id]))  . '" method="post" autocomplete="off" enctype="' . $TYPO3_CONF_VARS['SYS']['form_enctype'] . '" onsubmit="return TBE_EDITOR_checkSubmit(1);">';
         $this->doc->divClass = '';
         $this->doc->getTabMenu(0, '_', 0, array(
             '' => ''
