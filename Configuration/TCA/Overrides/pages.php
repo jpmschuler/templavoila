@@ -70,17 +70,17 @@ $tempColumns = array(
 			'selicon_cols' => 10,
 		)
 	),
-	'tx_templavoila_flex' => array(
-		'exclude' => 1,
-		'label' => 'LLL:EXT:templavoila/Resources/Private/Language/locallang_db.xlf:pages.tx_templavoila_flex',
-		'config' => array(
-			'type' => 'flex',
-			'ds_pointerField' => 'tx_templavoila_ds',
-			'ds_pointerField_searchParent' => 'pid',
-			'ds_pointerField_searchParent_subField' => 'tx_templavoila_next_ds',
-			'ds_tableField' => 'tx_templavoila_datastructure:dataprot',
-		)
-	),
+    'tx_templavoila_flex' => array(
+        'exclude' => 1,
+        'label' => 'LLL:EXT:templavoila/Resources/Private/Language/locallang_db.xlf:pages.tx_templavoila_flex',
+        'config' => array(
+            'type' => 'flex',
+            'ds_pointerField' => 'tx_templavoila_ds',
+            'ds_pointerField_searchParent' => 'pid',
+            'ds_pointerField_searchParent_subField' => 'tx_templavoila_next_ds',
+            'ds_tableField' => 'tx_templavoila_datastructure:dataprot',
+        )
+    ),
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages', $tempColumns);
 
