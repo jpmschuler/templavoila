@@ -238,9 +238,9 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
             }
             // Add document inline javascript
             $this->moduleTemplate->addJavaScriptCode('NewContentElementWizardInlineJavascript', '
-                function goToalt_doc() {
-                    ' . $this->onClickEvent . '
-                }');
+				function goToalt_doc() {
+					' . $this->onClickEvent . '
+				}');
             
             $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
             
@@ -286,16 +286,16 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                         ->getIcon($wInfo['iconIdentifier'])
                         ->render();
                     $menuItems[$key]['content'] .= '
-                        <div class="media">
-                            <a href="#" onclick="' . htmlspecialchars($aOnClick) . '">
-                                ' . $content . '
-                                <div class="media-left">
-                                    ' . $icon . '
-                                </div>
-                                <div class="media-body">
-                                    <strong>' . htmlspecialchars($wInfo['title']) . '</strong>' . '<br />' . nl2br(htmlspecialchars(trim($wInfo['description']))) . '</div>
-                            </a>
-                        </div>';
+						<div class="media">
+							<a href="#" onclick="' . htmlspecialchars($aOnClick) . '">
+								' . $content . '
+								<div class="media-left">
+									' . $icon . '
+								</div>
+								<div class="media-body">
+									<strong>' . htmlspecialchars($wInfo['title']) . '</strong>' . '<br />' . nl2br(htmlspecialchars(trim($wInfo['description']))) . '</div>
+							</a>
+						</div>';
                     $cc ++;
                 }
             }
@@ -535,7 +535,7 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
                             break;
                         } else {
                             // Add the parameter:
-                            $wizardItems[$key]['params'] .= '&defVals[tt_content][' . $fN . ']=' . rawurlencode($fV);
+                            $wizardItems[$key]['params'] .= '&defVals[tt_content][' . $fN . ']=' . rawurlencode($this->getLanguageService()->sL($fV));
                             $tmp = explode('_', $key);
                             $headersUsed[$tmp[0]] = $tmp[0];
                         }
@@ -572,3 +572,4 @@ class NewContentElementControllerTypo3Orig extends AbstractModule
         return $GLOBALS['BE_USER'];
     }
 }
+
