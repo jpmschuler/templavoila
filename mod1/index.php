@@ -419,12 +419,12 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
             $this->translatorMode = TRUE;
         }
         
-        // Initialize side bar and wizards:
-        $this->sideBarObj = & \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_sidebar', '');
+        // Initialize side bar and ^:
+        $this->sideBarObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\Sidebar::class);
         $this->sideBarObj->init($this);
         $this->sideBarObj->position = isset($this->modTSconfig['properties']['sideBarPosition']) ? $this->modTSconfig['properties']['sideBarPosition'] : 'toptabs';
         
-        $this->wizardsObj = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_wizards', '');
+        $this->wizardsObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\Wizards::class);
         $this->wizardsObj->init($this);
         
         // Initialize TemplaVoila API class:
@@ -433,15 +433,15 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
             $this->apiObj->modifyReferencesInLiveWS(TRUE);
         }
         // Initialize the clipboard
-        $this->clipboardObj = & \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_clipboard', '');
+        $this->clipboardObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\Clipboard::class);
         $this->clipboardObj->init($this);
         
         // Initialize the record module
-        $this->recordsObj = & \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_records', '');
+        $this->recordsObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\Records::class);
         $this->recordsObj->init($this);
         // Add the localization module if localization is enabled:
         if ($this->alternativeLanguagesDefined()) {
-            $this->localizationObj = & \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_localization', '');
+            $this->localizationObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\Localization::class);
             $this->localizationObj->init($this);
         }
         
@@ -693,7 +693,7 @@ class tx_templavoila_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass
             if ($this->rootElementTable == 'pages') {
                 
                 // Initialize the special doktype class:
-                $specialDoktypesObj = & \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_templavoila_mod1_specialdoktypes', '');
+                $specialDoktypesObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\ModHelper\SpecialDokTypes::class);
                 $specialDoktypesObj->init($this);
                 $doktype = $this->rootElementRecord['doktype'];
                 
