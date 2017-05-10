@@ -11,12 +11,11 @@ return array(
     'tx_templavoila_cm1_dsedit' => $extensionPath . 'cm1/class.tx_templavoila_cm1_dsedit.php',
     'tx_templavoila_cm1_etypes' => $extensionPath . 'cm1/class.tx_templavoila_cm1_etypes.php',
     'tx_templavoila_cm2' => $extensionPath . 'cm2/index.php',
-    'tx_templavoila_mod1_ajax' => $extensionPath . 'mod1/class.tx_templavoila_mod1_ajax.php',
-    'tx_templavoila_dbnewcontentel' => $extensionPath . 'mod1/db_new_content_el.php',
     'tx_templavoila_module1' => $extensionPath . 'mod1/index.php',
     'tx_templavoila_module2' => $extensionPath . 'mod2/index.php',
     'tx_templavoila_pi1' => $extensionPath . 'pi1/class.tx_templavoila_pi1.php',
     'Extension\Templavoila\Messaging\FlashMessage' => $extensionPath . 'Classes/Messaging/FlashMessage.php',
     'Extension\Templavoila\Controller\NewContentElementController' => $extensionPath . 'Classes/Controller/NewContentElementController.php',
-    'Extension\Templavoila\Controller\NewContentElementControllerTypo3Orig' => $extensionPath . 'Classes/Controller/NewContentElementControllerTypo3Orig.php'
+    'Extension\Templavoila\Controller\NewContentElementControllerTypo3Orig' => $extensionPath . 'Classes/Controller/NewContentElementControllerTypo3Orig.php',
+    'Extension\Templavoila\Utility\AjayUtility' => $extensionPath . 'Classes/Utility/AjaxUtility.php'
 );

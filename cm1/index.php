@@ -14,9 +14,7 @@
 
 // DEFAULT initialization of a module [BEGIN]
 unset($MCONF);
-require(dirname(__FILE__) . '/conf.php');
-require($BACK_PATH . 'init.php');
-$LANG->includeLLFile('EXT:templavoila/cm1/locallang.xlf');
+require (dirname(__FILE__) . '/conf.php');
 
 /**
  * Class for controlling the TemplaVoila module.
@@ -362,7 +360,8 @@ class tx_templavoila_cm1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 * @return void
 	 */
 	public function main() {
-
+	    
+	    $LANG->includeLLFile('EXT:templavoila/cm1/locallang.xlf');
 		// Initialize ds_edit
 		$this->dsEdit = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('tx_templavoila_cm1_dsedit', '');
 		$this->dsEdit->init($this);

@@ -62,4 +62,4 @@ if (TYPO3_MODE === 'BE' || (TYPO3_MODE === 'FE' && isset($GLOBALS['BE_USER']) &&
     \TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler('tx_templavoila_mod1_ajax::moveRecord', 'tx_templavoila_mod1_ajax->moveRecord');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerAjaxHandler('Extension\Templavoila\Utility\AjaxUtility::moveRecord', 'Extension\Templavoila\Utility\AjaxUtility->moveRecord');
