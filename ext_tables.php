@@ -9,8 +9,22 @@ if (TYPO3_MODE === 'BE') {
     );
     
     // Adding backend modules:
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('web', 'txtemplavoilaM1', 'top', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'mod1/');
-    
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule(
+        'web',
+        'txtemplavoilaM1',
+        'top','',
+        [
+            'routeTarget' => \Extension\Templavoila\Controller\BackendModulePage::class . '::mainAction',
+            'access' => 'user,group',
+            'name' => 'web_txtemplavoilaM1',
+            'labels' => [ 
+                'tabs_images' => [
+                    'tab' => 'EXT:templavoila/Resources/Public/Icon/Modules/PageModuleIcon.png',
+                ],
+                'll_ref' => 'LLL:EXT:templavoila/Resources/Private/Language/locallang_mod.xml',
+            ]
+        ]
+        );
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('web', 'txtemplavoilaM2', '', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'mod2/');
     
     $_EXTCONF = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['templavoila']);

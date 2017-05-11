@@ -72,7 +72,7 @@ return array(
 				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
-				'itemsProcFunc' => 'tx_templavoila_handleStaticdatastructures->main',
+				'itemsProcFunc' => 'Extension\Templavoila\Service\ItemProcFunc\StaticDataStructuresHandler->main',
 				'allowNonIdValues' => 1,
 				'suppress_icons' => 'ONLY_SELECTED',
 				'wizards' => array(

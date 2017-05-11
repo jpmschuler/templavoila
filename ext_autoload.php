@@ -15,6 +15,7 @@ return array(
     'tx_templavoila_module2' => $extensionPath . 'mod2/index.php',
     'tx_templavoila_pi1' => $extensionPath . 'pi1/class.tx_templavoila_pi1.php',
     'Extension\Templavoila\Messaging\FlashMessage' => $extensionPath . 'Classes/Messaging/FlashMessage.php',
+    'Extension\Templavoila\Controller\BackendModulePage' => $extensionPath . 'Classes/Controller/BackendModulePage.php',
     'Extension\Templavoila\Controller\NewContentElementController' => $extensionPath . 'Classes/Controller/NewContentElementController.php',
     'Extension\Templavoila\Controller\NewContentElementControllerTypo3Orig' => $extensionPath . 'Classes/Controller/NewContentElementControllerTypo3Orig.php',
     'Extension\Templavoila\Utility\AjayUtility' => $extensionPath . 'Classes/Utility/AjaxUtility.php'

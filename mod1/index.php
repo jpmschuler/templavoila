@@ -12,7 +12,7 @@ class tx_templavoila_module1 extends \Extension\Templavoila\Controller\BackendMo
 }
 
 // Make instance:
-$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_templavoila_module1');
+$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Extension\Templavoila\Controller\BackendModulePage::class);
 $SOBE->init();
 $SOBE->main();
 $SOBE->printContent();

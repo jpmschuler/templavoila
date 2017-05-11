@@ -1,26 +1,7 @@
 <?php 
 namespace Extension\Templavoila\Controller;
 
-use TYPO3\CMS\Core\Imaging\Icon;
-
-/*
- * taken from 7.6.15
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
- */
-
-/**
- * Script Class for the New Content element wizard
- */
-class BackendModulePage extends  \TYPO3\CMS\Backend\Module\BaseScriptClass {
+class BackendModulePage extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     
     
     /**
@@ -29,6 +10,9 @@ class BackendModulePage extends  \TYPO3\CMS\Backend\Module\BaseScriptClass {
      */
     protected $localizationObj;
     
+    var $postVars = null;
+    var $MCONF = null;
+    var $moduleName = 'web_txtemplavoilaM1';
     /**
      *
      * @var string
@@ -346,6 +330,16 @@ class BackendModulePage extends  \TYPO3\CMS\Backend\Module\BaseScriptClass {
      */
     const DOKTYPE_NORMAL_EDIT = 1;
     
+    
+    public function mainAction(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response)
+    {
+        $this->postVars = $request->getParsedBody();
+        $this->init();
+        $this->main();
+        $response->getBody()->write($this->content . $this->doc->endPage());
+        return ($response);
+    }
+    
     /**
      * *****************************************
      *
@@ -359,13 +353,19 @@ class BackendModulePage extends  \TYPO3\CMS\Backend\Module\BaseScriptClass {
      *
      * @return void
      */
+    function loadMCONF()
+    {
+        $this->MCONF = $GLOBALS['TBE_MODULES']['_configuration'][$this->moduleName];
+    }
+    
     public function init()
     {
+        $this->loadMCONF();
         parent::init();
+        $this->getBackendUser()->modAccess($this->MCONF, 1);
         
         $this->iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
         
-        $this->getBackendUser()->modAccess($GLOBALS['MCONF'], 1);
         $this->getLanguageService()->includeLLFile('EXT:backend/Resources/Private/Language/locallang.xlf');
         $this->getLanguageService()->includeLLFile('EXT:templavoila/mod1/locallang.xlf');
         
@@ -2024,7 +2024,7 @@ class BackendModulePage extends  \TYPO3\CMS\Backend\Module\BaseScriptClass {
                     $newXML = $flexObj->cleanFlexFormXML($entry['table'], 'tx_templavoila_flex', $recRow);
                     
                     // If the clean-all command is sent AND there is a difference in current/clean XML, save the clean:
-                    if (\TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_CLEAN_XML_ALL') && md5($recRow['tx_templavoila_flex']) != md5($newXML)) {
+                    if ($this->postVars('_CLEAN_XML_ALL') && md5($recRow['tx_templavoila_flex']) != md5($newXML)) {
                         $dataArr = array();
                         $dataArr[$entry['table']][$entry['uid']]['tx_templavoila_flex'] = $newXML;
                         
