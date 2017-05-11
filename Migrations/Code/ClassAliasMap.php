@@ -9,6 +9,5 @@ return (array(
     'tx_templavoila_mod1_wizards' => 'Extension\Templavoila\ModHelper\Wizards',
     
     'tx_templavoila_mod1_ajax' => 'Extension\Templavoila\Utility\AjaxUtility',
-    ,
     'tx_templavoila_handleStaticdatastructures' => 'Extension\Templavoila\Service\ItemProcFunc\StaticDataStructuresHandler'
 ));
