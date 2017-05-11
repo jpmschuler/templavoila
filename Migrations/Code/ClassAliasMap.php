@@ -10,6 +10,5 @@ return (array(
     
     'tx_templavoila_mod1_ajax' => 'Extension\Templavoila\Utility\AjaxUtility',
     ,
-    'tx_templavoila_module1' => 'Extension\Templavoila\Controller\BackendModulePage',
     'tx_templavoila_handleStaticdatastructures' => 'Extension\Templavoila\Service\ItemProcFunc\StaticDataStructuresHandler'
 ));

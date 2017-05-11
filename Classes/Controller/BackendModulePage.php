@@ -2024,7 +2024,7 @@ class BackendModulePage extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
                     $newXML = $flexObj->cleanFlexFormXML($entry['table'], 'tx_templavoila_flex', $recRow);
                     
                     // If the clean-all command is sent AND there is a difference in current/clean XML, save the clean:
-                    if ($this->postVars('_CLEAN_XML_ALL') && md5($recRow['tx_templavoila_flex']) != md5($newXML)) {
+                    if (\TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_CLEAN_XML_ALL') && md5($recRow['tx_templavoila_flex']) != md5($newXML)) {
                         $dataArr = array();
                         $dataArr[$entry['table']][$entry['uid']]['tx_templavoila_flex'] = $newXML;
                         

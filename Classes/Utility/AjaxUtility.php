@@ -54,7 +54,7 @@ class AjaxUtility
         
         $this->apiObj->moveElement($sourcePointer, $destinationPointer);
     }
-    public function moveRecordWithRoute(ServerRequestInterface $request, ResponseInterface $response) {
+    public function moveRecordWithRoute(\TYPO3\CMS\Core\Http\ServerRequest $request, \TYPO3\CMS\Core\Http\Response $response) {
         
         $sourcePointer = $this->apiObj->flexform_getPointerFromString(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('source'));
         
